@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">I Study</string>
+    <string name="login_button">Iniciar Sesión</string>
+    <string name="register_button">Registrarse</string>
+    <string name="hint_user">Usuario</string>
+    <string name="hint_password">Password</string>
+</resources>
