@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="Progressbar.White" parent="AppTheme">
+        <item name="colorControlActivated">#ffffff</item>
+    </style>
+
 </resources>
