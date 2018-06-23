@@ -5,4 +5,5 @@
     <string name="hint_user">Usuario</string>
     <string name="hint_password">Password</string>
     <string name="registro_tittle">Registro</string>
+    <string name="logout">Salir</string>
 </resources>

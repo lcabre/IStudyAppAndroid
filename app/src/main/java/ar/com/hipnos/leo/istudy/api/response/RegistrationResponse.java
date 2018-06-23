@@ -1,4 +1,4 @@
-package ar.com.hipnos.leo.istudy.api;
+package ar.com.hipnos.leo.istudy.api.response;
 
 import java.io.Serializable;
 
