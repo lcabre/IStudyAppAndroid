@@ -6,4 +6,5 @@
     <string name="hint_password">Password</string>
     <string name="registro_tittle">Registro</string>
     <string name="logout">Salir</string>
+    <string name="campo_obligatorio">Campo Obligatorio</string>
 </resources>

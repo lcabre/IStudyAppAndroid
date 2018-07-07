@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import java.util.List;
 
 import ar.com.hipnos.leo.istudy.api.modell.Carrera;
+import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import ar.com.hipnos.leo.istudy.api.response.LoginResponse;
 import ar.com.hipnos.leo.istudy.api.response.RegistrationResponse;
 import retrofit2.Callback;
@@ -29,6 +30,7 @@ public class ApiService {
     private static ApiInterface getApi(){
         Retrofit retrofit =new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                //.baseUrl("http://192.168.43.91/")
                 .baseUrl("http://192.168.1.37/")
                 .build();
 
@@ -55,5 +57,9 @@ public class ApiService {
 
     public static void getCarreras(String authorization, Callback<List<Carrera>> callback){
         getApi().getCarreras(authorization).enqueue(callback);
+    }
+
+    public static void getMaterias(String authorization, String idCarrera,  Callback<List<Materia>> callback) {
+        getApi().getMaterias(authorization, idCarrera).enqueue(callback);
     }
 }

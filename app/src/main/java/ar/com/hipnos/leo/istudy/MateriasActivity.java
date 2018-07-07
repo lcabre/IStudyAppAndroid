@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.transitionseverywhere.Fade;
 import com.transitionseverywhere.Slide;
 import com.transitionseverywhere.TransitionManager;
@@ -29,6 +30,7 @@ import java.util.List;
 import ar.com.hipnos.leo.istudy.api.ApiService;
 import ar.com.hipnos.leo.istudy.api.ErrorService;
 import ar.com.hipnos.leo.istudy.api.modell.Carrera;
+import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -37,9 +39,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CarrerasActivity extends AppCompatActivity {
+public class MateriasActivity extends AppCompatActivity {
 
-    private static final String TAG = CarrerasActivity.class.getSimpleName();
+    private static final String TAG = MateriasActivity.class.getSimpleName();
 
     @BindView(R.id.reveal_items)
     LinearLayout settings;
@@ -53,7 +55,7 @@ public class CarrerasActivity extends AppCompatActivity {
     @BindView(R.id.error_message)
     TextView error_message;
 
-    @BindView(R.id.carreras)
+    @BindView(R.id.materias)
     RecyclerView lista;
 
     @BindView(R.id.progressBar)
@@ -64,7 +66,7 @@ public class CarrerasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_carreras);
+        setContentView(R.layout.activity_materias);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -81,16 +83,18 @@ public class CarrerasActivity extends AppCompatActivity {
 
         loading.setVisibility(View.VISIBLE);
 
-        toolbar.setTitle("Carreras");
+        String materia = "1";
 
-        ApiService.getCarreras( authorization, new Callback<List<Carrera>>() {
+        toolbar.setTitle("Materias");
+
+        ApiService.getMaterias( authorization, materia, new Callback<List<Materia>>() {
             @Override
-            public void onResponse(Call<List<Carrera>> call, Response<List<Carrera>> response) {
+            public void onResponse(Call<List<Materia>> call, Response<List<Materia>> response) {
                 if (response.isSuccessful()){
 
-                    List<Carrera> carreras = response.body();
+                    List<Materia> Materias = response.body();
 
-                    CarreraAdapter adapter = new CarreraAdapter(carreras);
+                    MateriaAdapter adapter = new MateriaAdapter(Materias);
                     lista.setAdapter(adapter);
 
                     loading.setVisibility(View.GONE);
@@ -106,7 +110,7 @@ public class CarrerasActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<Carrera>> call, Throwable t) {
+            public void onFailure(Call<List<Materia>> call, Throwable t) {
 
                 Log.d(TAG,t.getLocalizedMessage());
 
@@ -154,7 +158,7 @@ public class CarrerasActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
         prefs.edit().remove("access_token").remove("refresh_token").apply();
 
-        Intent i = new Intent(CarrerasActivity.this, MainActivity.class);
+        Intent i = new Intent(MateriasActivity.this, MainActivity.class);
         startActivity(i);
     }
 }

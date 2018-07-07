@@ -17,10 +17,14 @@ import butterknife.ButterKnife;
 
 public class CarreraAdapter extends RecyclerView.Adapter<CarreraAdapter.ViewHolder>{
 
-    private List<Carrera> carreras;
+    private List<Carrera> carreras = new ArrayList<Carrera>();
 
     public CarreraAdapter(List<Carrera> carrerasList) {
-        carreras = carrerasList;
+
+        if(carrerasList != null) {
+            carreras = carrerasList;
+        }
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

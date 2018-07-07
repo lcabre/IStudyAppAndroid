@@ -31,12 +31,14 @@ import retrofit2.Response;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.squareup.picasso.Picasso;
 import com.transitionseverywhere.Fade;
 import com.transitionseverywhere.Slide;
 import com.transitionseverywhere.TransitionManager;
@@ -83,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected item text from ListView
+
                 String selectedItem = (String) parent.getItemAtPosition(position);
 
                 final Intent i;
@@ -96,6 +98,10 @@ public class HomeActivity extends AppCompatActivity {
                 switch (selectedItem){
                     case "Carreras":
                         to = CarrerasActivity.class;
+                        break;
+                    case "Materias":
+                        to = MateriasActivity.class;
+                        break;
                 }
 
                 i = new Intent(from, to);

@@ -3,6 +3,7 @@ package ar.com.hipnos.leo.istudy.api;
 import java.util.List;
 
 import ar.com.hipnos.leo.istudy.api.modell.Carrera;
+import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import ar.com.hipnos.leo.istudy.api.response.LoginResponse;
 import ar.com.hipnos.leo.istudy.api.response.RegistrationResponse;
 import retrofit2.Call;
@@ -10,8 +11,8 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiInterface {
 
@@ -31,4 +32,8 @@ public interface ApiInterface {
 
     @GET("api/carreras")
     Call<List<Carrera>> getCarreras(@Header("Authorization") String authorization);
+
+    @GET("api/carreras/{idCarrera}/materias")
+    Call<List<Materia>> getMaterias(@Header("Authorization") String authorization, @Path("idCarrera") String idCarrera);
+
 }

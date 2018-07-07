@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             public void run() {
                 startActivity(i);
+                finish();
             }
         },1000);
     }
