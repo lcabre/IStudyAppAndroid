@@ -38,10 +38,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CarrerasActivity extends AppCompatActivity {
+public class ListaCarrerasActivity extends AppCompatActivity {
 
-    private static final String TAG = CarrerasActivity.class.getSimpleName();
-    private Context context = this;
+    private static final String TAG = ListaCarrerasActivity.class.getSimpleName();
+    Context context = this;
 
     @BindView(R.id.reveal_items)
     LinearLayout settings;
@@ -66,7 +66,7 @@ public class CarrerasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_carreras);
+        setContentView(R.layout.activity_lista_carreras);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -83,9 +83,9 @@ public class CarrerasActivity extends AppCompatActivity {
 
         loading.setVisibility(View.VISIBLE);
 
-        toolbar.setTitle("Mis carreras");
+        toolbar.setTitle("Carreras UNLAM");
 
-        ApiService.getCarreras( authorization, new Callback<List<Carrera>>() {
+        ApiService.getListaCarreras( authorization, new Callback<List<Carrera>>() {
             @Override
             public void onResponse(Call<List<Carrera>> call, Response<List<Carrera>> response) {
                 if (response.isSuccessful()){
@@ -164,14 +164,7 @@ public class CarrerasActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
         prefs.edit().remove("access_token").remove("refresh_token").apply();
 
-        Intent i = new Intent(CarrerasActivity.this, MainActivity.class);
-        startActivity(i);
-    }
-
-    @OnClick(R.id.newCarrera)
-    public void onNewCarreraClick(){
-
-        Intent i = new Intent(CarrerasActivity.this, ListaCarrerasActivity.class);
+        Intent i = new Intent(ListaCarrerasActivity.this, MainActivity.class);
         startActivity(i);
     }
 }

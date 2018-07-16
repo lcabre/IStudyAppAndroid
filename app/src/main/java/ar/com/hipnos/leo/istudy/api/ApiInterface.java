@@ -6,7 +6,9 @@ import ar.com.hipnos.leo.istudy.api.modell.Carrera;
 import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import ar.com.hipnos.leo.istudy.api.response.LoginResponse;
 import ar.com.hipnos.leo.istudy.api.response.RegistrationResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -33,7 +35,16 @@ public interface ApiInterface {
     @GET("api/carreras")
     Call<List<Carrera>> getCarreras(@Header("Authorization") String authorization);
 
+    @GET("api/carreras/list")
+    Call<List<Carrera>> getListaCarreras(@Header("Authorization") String authorization);
+
+    @GET("api/carreras/{idCarrera}/join")
+    Call<ResponseBody> joinCarrera(@Header("Authorization") String authorization, @Path("idCarrera") Integer idCarrera);
+
     @GET("api/carreras/{idCarrera}/materias")
-    Call<List<Materia>> getMaterias(@Header("Authorization") String authorization, @Path("idCarrera") String idCarrera);
+    Call<List<Materia>> getMaterias(@Header("Authorization") String authorization, @Path("idCarrera") Integer idCarrera);
+
+    @GET("api/materias/{idMateria}")
+    Call<Materia> getMateria(@Header("Authorization") String authorization, @Path("idMateria") Integer idMateria);
 
 }

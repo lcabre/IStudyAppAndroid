@@ -12,7 +12,9 @@ import ar.com.hipnos.leo.istudy.api.modell.Carrera;
 import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import ar.com.hipnos.leo.istudy.api.response.LoginResponse;
 import ar.com.hipnos.leo.istudy.api.response.RegistrationResponse;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -55,11 +57,23 @@ public class ApiService {
         getApi().login(grant_type, client_id, client_secret, username, password).enqueue(callback);
     }
 
+    public static void getListaCarreras(String authorization, Callback<List<Carrera>> callback){
+        getApi().getListaCarreras(authorization).enqueue(callback);
+    }
+
     public static void getCarreras(String authorization, Callback<List<Carrera>> callback){
         getApi().getCarreras(authorization).enqueue(callback);
     }
 
-    public static void getMaterias(String authorization, String idCarrera,  Callback<List<Materia>> callback) {
+    public static void getMaterias(String authorization, Integer idCarrera,  Callback<List<Materia>> callback) {
         getApi().getMaterias(authorization, idCarrera).enqueue(callback);
+    }
+
+    public static void getMateria(String authorization, Integer idMateria,  Callback<Materia> callback) {
+        getApi().getMateria(authorization, idMateria).enqueue(callback);
+    }
+
+    public static void joinCarrera(String authorization, Integer idCarrera,  Callback<ResponseBody> callback) {
+        getApi().joinCarrera(authorization, idCarrera).enqueue(callback);
     }
 }

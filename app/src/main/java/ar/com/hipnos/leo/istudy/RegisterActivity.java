@@ -57,52 +57,63 @@ public class RegisterActivity extends AppCompatActivity {
     public void clickRegister(){
         String usuario_ingresado = this.usuario.getText().toString();
         String password_ingresado = this.password.getText().toString();
-        registerButton.setEnabled(false);
-        loading.setVisibility(View.VISIBLE);
 
-        Log.d(TAG,"registrando conusuario: "+usuario_ingresado+" password: "+password_ingresado);
+        if(usuario_ingresado.isEmpty()) {
+            this.usuario.setError(getString(R.string.campo_obligatorio));
+        }else if(password_ingresado.isEmpty()){
+            this.password.setError(getString(R.string.campo_obligatorio));
+        }else {
+            this.usuario.setError(null);//borra el error
+            this.password.setError(null);
 
-        ApiService.register(usuario_ingresado, password_ingresado, new Callback<RegistrationResponse>() {
-            @Override
-            public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
-                if (response.isSuccessful()){
-                    Log.i(TAG, response.message());
+            registerButton.setEnabled(false);
+            loading.setVisibility(View.VISIBLE);
 
-                    RegistrationResponse body = response.body();
+            Log.d(TAG, "registrando conusuario: " + usuario_ingresado + " password: " + password_ingresado);
 
-                    SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE)
-                            .edit();
+            ApiService.register(usuario_ingresado, password_ingresado, new Callback<RegistrationResponse>() {
+                @Override
+                public void onResponse(Call<RegistrationResponse> call, Response<RegistrationResponse> response) {
+                    if (response.isSuccessful()) {
+                        Log.i(TAG, response.message());
 
-                    editor.putString("token_type", body.getToken_type());
-                    editor.putString("access_token", body.getAccess_token());
-                    editor.putString("refresh_token", body.getRefresh_token());
-                    editor.apply();
+                        RegistrationResponse body = response.body();
 
-                    Intent i = new Intent(RegisterActivity.this, HomeActivity.class);
-                    startActivity(i);
+                        SharedPreferences.Editor editor = getSharedPreferences("token", MODE_PRIVATE)
+                                .edit();
 
-                }else{
+                        editor.putString("token_type", body.getToken_type());
+                        editor.putString("access_token", body.getAccess_token());
+                        editor.putString("refresh_token", body.getRefresh_token());
+                        editor.apply();
 
-                    String error = response.message().equals("Unauthorized")?"Las credenciales proporcionadas no son validas":"Se produjo un error, intente nuevamente";
-                    ErrorService.showError(error_message, error );
+                        Intent i = new Intent(RegisterActivity.this, HomeActivity.class);
+                        startActivity(i);
+                        finish();
 
-                    Log.e(TAG,response.message());
+                    } else {
+
+                        String error = response.message().equals("Unauthorized") ? "Las credenciales proporcionadas no son validas" : "Se produjo un error, intente nuevamente";
+                        ErrorService.showError(error_message, error);
+
+                        Log.e(TAG, response.message());
+                    }
+
+                    registerButton.setEnabled(true);
+                    loading.setVisibility(View.INVISIBLE);
                 }
 
-                registerButton.setEnabled(true);
-                loading.setVisibility(View.INVISIBLE);
-            }
+                @Override
+                public void onFailure(Call<RegistrationResponse> call, Throwable t) {
 
-            @Override
-            public void onFailure(Call<RegistrationResponse> call, Throwable t) {
+                    Log.d(TAG, t.getLocalizedMessage());
 
-                Log.d(TAG,t.getLocalizedMessage());
+                    ErrorService.showError(error_message, "No fue posible cominicarse con el servidor. Verifique si tiene internet.");
 
-                ErrorService.showError(error_message, "No no no fue posible cominicarse con el servidor. Verifique si tiene internet." );
-
-                registerButton.setEnabled(true);
-                loading.setVisibility(View.INVISIBLE);
-            }
-        });
+                    registerButton.setEnabled(true);
+                    loading.setVisibility(View.INVISIBLE);
+                }
+            });
+        }
     }
 }

@@ -1,5 +1,6 @@
 package ar.com.hipnos.leo.istudy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import retrofit2.Response;
 public class MateriasActivity extends AppCompatActivity {
 
     private static final String TAG = MateriasActivity.class.getSimpleName();
+    private Context context = this;
 
     @BindView(R.id.reveal_items)
     LinearLayout settings;
@@ -61,7 +63,7 @@ public class MateriasActivity extends AppCompatActivity {
     @BindView(R.id.progressBar)
     ProgressBar loading;
 
-    Boolean visible;
+    Boolean visible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +85,9 @@ public class MateriasActivity extends AppCompatActivity {
 
         loading.setVisibility(View.VISIBLE);
 
-        String materia = "1";
+        Integer materia = getIntent().getIntExtra("carreraId",0);
 
-        toolbar.setTitle("Materias");
+        toolbar.setTitle("Mis materias");
 
         ApiService.getMaterias( authorization, materia, new Callback<List<Materia>>() {
             @Override
@@ -94,13 +96,15 @@ public class MateriasActivity extends AppCompatActivity {
 
                     List<Materia> Materias = response.body();
 
-                    MateriaAdapter adapter = new MateriaAdapter(Materias);
+                    MateriaAdapter adapter = new MateriaAdapter(context, Materias);
                     lista.setAdapter(adapter);
 
                     loading.setVisibility(View.GONE);
 
                     Log.i(TAG, response.message());
                 }else{
+
+                    loading.setVisibility(View.GONE);
 
                     String error = response.message().equals("Unauthenticated")?"No esta autenticado":"Se produjo un error, intente nuevamente";
                     ErrorService.showError(error_message, error );
@@ -113,6 +117,8 @@ public class MateriasActivity extends AppCompatActivity {
             public void onFailure(Call<List<Materia>> call, Throwable t) {
 
                 Log.d(TAG,t.getLocalizedMessage());
+
+                loading.setVisibility(View.GONE);
 
                 ErrorService.showError(error_message, "No fue posible cominicarse con el servidor. Verifique si tiene internet." );
             }

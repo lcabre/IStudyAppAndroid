@@ -96,6 +96,7 @@ public class LoginActivity extends Activity {
 
                         Intent i = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(i);
+                        finish();
 
                     }else{
 

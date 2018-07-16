@@ -2,9 +2,10 @@ package ar.com.hipnos.leo.istudy.api.modell;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Materia {
+public class Materia implements Serializable {
     private Integer id;
     private Integer id_carrera;
     private String correlativas;

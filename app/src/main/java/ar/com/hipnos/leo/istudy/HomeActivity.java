@@ -69,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
 
     Boolean visible = false;
 
-    String[] menuOptions = {"Carreras","Materias","Parciales"};
+    String[] menuOptions = {"Carreras"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,8 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+
+        toolbar.setTitle("Menu");
 
         ArrayAdapter adapter = new ArrayAdapter<>(this, R.layout.activity_listview, menuOptions);
         lista.setAdapter(adapter);

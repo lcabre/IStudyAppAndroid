@@ -3,6 +3,7 @@ package ar.com.hipnos.leo.istudy;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
@@ -15,21 +16,30 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.squareup.picasso.Picasso;
 import com.transitionseverywhere.Fade;
 import com.transitionseverywhere.Slide;
 import com.transitionseverywhere.TransitionManager;
 import com.transitionseverywhere.TransitionSet;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 
 import ar.com.hipnos.leo.istudy.api.ApiService;
 import ar.com.hipnos.leo.istudy.api.ErrorService;
-import ar.com.hipnos.leo.istudy.api.modell.Carrera;
+import ar.com.hipnos.leo.istudy.api.modell.Materia;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -38,9 +48,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CarrerasActivity extends AppCompatActivity {
+public class MateriaActivity extends AppCompatActivity {
 
-    private static final String TAG = CarrerasActivity.class.getSimpleName();
+    private static final String TAG = MateriaActivity.class.getSimpleName();
     private Context context = this;
 
     @BindView(R.id.reveal_items)
@@ -49,80 +59,69 @@ public class CarrerasActivity extends AppCompatActivity {
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
-    @BindView(R.id.home)
-    RelativeLayout home;
+    @BindView(R.id.nombre)
+    TextView nombre;
 
-    @BindView(R.id.error_message)
-    TextView error_message;
+    @BindView(R.id.imagen)
+    SimpleDraweeView imagen;
 
-    @BindView(R.id.carreras)
-    RecyclerView lista;
+    @BindView(R.id.codigo)
+    TextView codigo;
 
-    @BindView(R.id.progressBar)
-    ProgressBar loading;
+    @BindView(R.id.correlativas)
+    TextView correlativas;
 
     Boolean visible = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_carreras);
+        setContentView(R.layout.activity_materia);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
 
-        SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
-        String accessToken = prefs.getString("access_token", null);
-        String tokenType = prefs.getString("token_type", null);
-        String authorization = tokenType+" "+accessToken;
+        Materia materia = (Materia) getIntent().getSerializableExtra("materia");
 
-        lista.setHasFixedSize(true);
+        nombre.setText(materia.getNombre());
+        codigo.setText(materia.getCodigo().toString());
 
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        lista.setLayoutManager(llm);
+        if(materia.getCorrelativas() != null){
 
-        loading.setVisibility(View.VISIBLE);
+            JSONObject jObject;
+            JSONArray jArray = null;
+            String correl = "";
 
-        toolbar.setTitle("Mis carreras");
+            try {
+                jObject = new JSONObject(materia.getCorrelativas());
+                jArray = jObject.getJSONArray("codigos");
+                for (int i=0; i < jArray.length(); i++)
+                {
+                    try {
+                        String cod = jArray.getString(i);
+                        if(i != jArray.length()-1)
+                            correl = correl.concat(cod+", ");
+                        else
+                            correl = correl.concat(cod);
 
-        ApiService.getCarreras( authorization, new Callback<List<Carrera>>() {
-            @Override
-            public void onResponse(Call<List<Carrera>> call, Response<List<Carrera>> response) {
-                if (response.isSuccessful()){
-
-                    List<Carrera> carreras = response.body();
-
-                    loading.setVisibility(View.GONE);
-
-                    if(carreras == null)
-                        ErrorService.showError(error_message, "No está inscripto a ninguna carrera" );
-                    else{
-                        CarreraAdapter adapter = new CarreraAdapter(context, carreras);
-                        lista.setAdapter(adapter);
+                    } catch (JSONException e) {
+                        // Oops
                     }
-
-                    Log.i(TAG, response.message());
-                }else{
-
-                    loading.setVisibility(View.GONE);
-
-                    String error = response.message().equals("Unauthenticated")?"No esta autenticado":"Se produjo un error, intente nuevamente";
-                    ErrorService.showError(error_message, error );
-
-                    Log.e(TAG,response.message());
                 }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
-            @Override
-            public void onFailure(Call<List<Carrera>> call, Throwable t) {
+            correlativas.setText(correl);
+        }
+        else
+            correlativas.setText("");
 
-                Log.d(TAG,t.getLocalizedMessage());
 
-                loading.setVisibility(View.GONE);
+        Uri uri = Uri.parse(materia.getImagen());
+        imagen.setImageURI(uri);
 
-                ErrorService.showError(error_message, "No fue posible cominicarse con el servidor. Verifique si tiene internet." );
-            }
-        });
     }
 
     @Override
@@ -143,7 +142,8 @@ public class CarrerasActivity extends AppCompatActivity {
                         .setInterpolator(visible ? new FastOutSlowInInterpolator() :
                                 new LinearOutSlowInInterpolator());
 
-                TransitionManager.beginDelayedTransition(home, set);
+                ViewGroup view = (ViewGroup) findViewById(android.R.id.content);
+                TransitionManager.beginDelayedTransition(view, set);
 
                 visible = !visible;
                 settings.setVisibility(visible ? View.VISIBLE : View.INVISIBLE);
@@ -164,14 +164,7 @@ public class CarrerasActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("token", MODE_PRIVATE);
         prefs.edit().remove("access_token").remove("refresh_token").apply();
 
-        Intent i = new Intent(CarrerasActivity.this, MainActivity.class);
-        startActivity(i);
-    }
-
-    @OnClick(R.id.newCarrera)
-    public void onNewCarreraClick(){
-
-        Intent i = new Intent(CarrerasActivity.this, ListaCarrerasActivity.class);
+        Intent i = new Intent(MateriaActivity.this, MainActivity.class);
         startActivity(i);
     }
 }

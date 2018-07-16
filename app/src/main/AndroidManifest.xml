@@ -24,6 +24,8 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".CarrerasActivity" />
         <activity android:name=".MateriasActivity" />
+        <activity android:name=".ListaCarrerasActivity" />
+        <activity android:name=".MateriaActivity" />
     </application>
 
 </manifest>

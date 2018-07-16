@@ -1,5 +1,7 @@
 package ar.com.hipnos.leo.istudy;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +28,11 @@ public class MateriaAdapter extends RecyclerView.Adapter<MateriaAdapter.ViewHold
 
     private List<Materia> materias = new ArrayList<Materia>();
 
-    public MateriaAdapter(List<Materia> materiasList) {
+    private Context context;
+
+    public MateriaAdapter(Context contexto, List<Materia> materiasList) {
+
+        context = contexto;
 
         if(materiasList != null) {
             materias = materiasList;
@@ -89,10 +95,14 @@ public class MateriaAdapter extends RecyclerView.Adapter<MateriaAdapter.ViewHold
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(view.getContext(),
-                        "Item clickeado: " + materia.getNombre(),
-                        Toast.LENGTH_LONG)
-                        .show();
+//                Toast.makeText(view.getContext(),
+//                        "Item clickeado: " + materia.getNombre(),
+//                        Toast.LENGTH_LONG)
+//                        .show();
+
+                Intent i = new Intent(context, MateriaActivity.class);
+                i.putExtra("materia", materia);
+                context.startActivity(i);
             }
         });
     }
